@@ -7,6 +7,8 @@ from curtsies.terminal import Terminal
 from curtsies.fsarray import FSArray
 
 board = [ [ 0 ] * 4 for _ in range(4) ]
+board[1][3] = 2
+board[3][2] = 2
 
 def printBoard(board):
     ret = []
