@@ -71,10 +71,17 @@ def move_right(board):
         line[:] = tilt_line(line[::-1])[::-1]
 
 def move_up(board):
-    pass
+    tilted = []
+    columns = zip(*board)
+    for col in columns:
+        tilted.append(tilt_line(col))
+    for row, line in zip(zip(*tilted), board):
+        line[:] = row
 
 def move_down(board):
-    pass    
+    board[:] = board[::-1]
+    move_up(board)
+    board[:] = board[::-1]
 
 def main():
     board = initBoard()
@@ -90,7 +97,6 @@ def main():
                     return
                 elif c in moves:
                     moves[c](board)
-
 
                 t.render_to_terminal(printBoard(board))
 
