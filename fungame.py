@@ -23,24 +23,58 @@ def initBoard():
     board[3][2] = 2
     return board
 
+
 def tilt_line(line):
     '''
     >>> tilt_line([0,0,0,0])
     [0, 0, 0, 0]
+    >>> tilt_line([0,0,0,2])
+    [2, 0, 0, 0]
+    >>> tilt_line([0,2,0,2])
+    [4, 0, 0, 0]
+    >>> tilt_line([0,2,4,4])
+    [2, 8, 0, 0]
     '''
     entries = [x for x in line if x]
     if not entries:
         return [0, 0, 0, 0]
     if len(entries) == 1:
         return [entries[0], 0, 0, 0]
-    if len(entries) == 2:
-        if entries[0] == entries[1]:
-            return [entries[0] * 2, 0, 0, 0]
+
+    ret = []
+    skip = False
+
+    for curr, next in zip(entries[:-1], entries[1:]):
+        if skip:
+            skip = False
+            continue
+        if curr == next:
+            ret.append(curr * 2)
+            skip = True
         else:
-            return [entries[0], entries[1], 0, 0]
+            ret.append(curr)
+
+    if not skip:
+        ret.append(next)
+
+    return (ret + [0,0,0,0])[:4]
+
+
 
 def move_left(board):
+    for line in board:
+        line[:] = tilt_line(line)
+
+
+def move_right(board):
+    for line in board:
+        line[:] = tilt_line(line[::-1])[::-1]
+
+def move_up(board):
     pass
+
+def move_down(board):
+    pass    
 
 def main():
     board = initBoard()
@@ -55,9 +89,10 @@ def main():
                 if c == 'q':
                     return
                 elif c in moves:
-                    moves[c]()
+                    moves[c](board)
+
+
                 t.render_to_terminal(printBoard(board))
-                print(c)
 
 if __name__ == '__main__':
     import doctest
