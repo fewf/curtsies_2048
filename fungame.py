@@ -1,19 +1,46 @@
 import sys, random
 
-from curtsies.fmtfuncs import red, bold, green, on_blue, yellow, on_red
+from curtsies.fmtfuncs import *
 
 from curtsies.window import Window
 from curtsies.terminal import Terminal
 from curtsies.fsarray import FSArray
 
+# def test_colors():
+#     board = [
+#                 [0,2,4,8],
+#                 [16,32,64,128],
+#                 [256,512,1024,2048],
+#                 [0, 0, 0, 0]
+#             ]
 
+
+#     with Terminal(sys.stdin, sys.stdout) as tc:
+#         with Window(tc) as t:
+#             t.render_to_terminal(printBoard(board))
+#             rows, columns = t.tc.get_screen_size()
+#             c = t.tc.get_event()
+                
+            
 
 def printBoard(board):
+    colors = {2: lambda x: yellow(x),
+              4: lambda x: red(x),
+              8: lambda x: blue(x),
+              16: lambda x: green(x),
+              32: lambda x: bold(yellow(x)),
+              64: lambda x: bold(red(x)),
+              128: lambda x: bold(blue(x)),
+              256: lambda x: bold(green(x)),
+              512: lambda x: on_blue(bold(yellow(x))),
+              1024: lambda x: on_green(bold(red(x))),
+              2048: lambda x: on_red(bold(blue(x)))
+              }
     ret = []
     for row in board:
         line = ''
         for cell in row:
-            line += str(cell).center(6)
+            line += colors.get(cell, lambda x: x)(str(cell)).center(6)
         ret.append(line)
     return ret
 
@@ -104,6 +131,13 @@ def move_down(board):
     board[:] = board[::-1]
 
 def main():
+    # board = [
+    #         [0,2,4,8],
+    #         [16,32,64,128],
+    #         [256,512,1024,2048],
+    #         [0, 0, 0, 0]
+    #     ]
+
     board = initBoard()
 
     moves = {'KEY_LEFT': move_left, 'KEY_RIGHT': move_right, 'KEY_UP': move_up, 'KEY_DOWN': move_down}
