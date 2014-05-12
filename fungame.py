@@ -1,4 +1,4 @@
-import sys
+import sys, random
 
 from curtsies.fmtfuncs import red, bold, green, on_blue, yellow, on_red
 
@@ -78,6 +78,26 @@ def move_up(board):
     for row, line in zip(zip(*tilted), board):
         line[:] = row
 
+def get_new_tile():
+    if random.random() > 0.9:
+        return 4
+    else:
+        return 2
+
+def choose_empty(board):
+    spots = []
+    for i, row in enumerate(board):
+        for j, cell in enumerate(row):
+            if not cell:
+                spots.append([i,j])
+    if not spots:
+        raise ValueError("Game over. You lose.")
+    return random.choice(spots)
+
+def add_tile(board):
+    i, j = choose_empty(board)
+    board[i][j] = get_new_tile()
+
 def move_down(board):
     board[:] = board[::-1]
     move_up(board)
@@ -97,6 +117,7 @@ def main():
                     return
                 elif c in moves:
                     moves[c](board)
+                    add_tile(board)
 
                 t.render_to_terminal(printBoard(board))
 
