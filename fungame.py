@@ -24,7 +24,8 @@ from curtsies.fsarray import FSArray
             
 
 def printBoard(board):
-    colors = {2: lambda x: yellow(x),
+    colors = {
+              2: lambda x: yellow(x),
               4: lambda x: red(x),
               8: lambda x: blue(x),
               16: lambda x: green(x),
@@ -35,12 +36,12 @@ def printBoard(board):
               512: lambda x: on_blue(bold(yellow(x))),
               1024: lambda x: on_green(bold(red(x))),
               2048: lambda x: on_red(bold(blue(x)))
-              }
+             }
     ret = []
     for row in board:
         line = ''
         for cell in row:
-            line += colors.get(cell, lambda x: x)(str(cell)).center(6)
+            line += colors.get(cell, lambda x: '.' if x == '0' else x)(str(cell)).center(6)
         ret.append(line)
     return ret
 
@@ -105,6 +106,11 @@ def move_up(board):
     for row, line in zip(zip(*tilted), board):
         line[:] = row
 
+def move_down(board):
+    board[:] = board[::-1]
+    move_up(board)
+    board[:] = board[::-1]
+
 def get_new_tile():
     if random.random() > 0.9:
         return 4
@@ -125,10 +131,6 @@ def add_tile(board):
     i, j = choose_empty(board)
     board[i][j] = get_new_tile()
 
-def move_down(board):
-    board[:] = board[::-1]
-    move_up(board)
-    board[:] = board[::-1]
 
 def main():
     # board = [
