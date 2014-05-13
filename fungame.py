@@ -117,14 +117,20 @@ def get_new_tile():
     else:
         return 2
 
+
+def board_full(board):
+    for line in board:
+        for cell in line:
+            if not cell:
+                return False
+    return True
+
 def choose_empty(board):
     spots = []
     for i, row in enumerate(board):
         for j, cell in enumerate(row):
             if not cell:
                 spots.append([i,j])
-    if not spots:
-        raise ValueError("Game over. You lose.")
     return random.choice(spots)
 
 def add_tile(board):
@@ -155,8 +161,15 @@ def main():
                     old_board = tuple([tuple(e) for e in board])
                     moves[c](board)
 
-                    if old_board != tuple([tuple(e) for e in board]):
+                    new_board = tuple([tuple(e) for e in board])
+                    if old_board != new_board:
                         add_tile(board)
+                    else:
+                        if board_full(old_board):
+                            raise ValueError("Game over. You lose.")
+                        else:
+                            pass # non-mutating move
+
 
                 t.render_to_terminal(printBoard(board))
 
