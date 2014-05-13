@@ -152,8 +152,11 @@ def main():
                 if c == 'q':
                     return
                 elif c in moves:
+                    old_board = tuple([tuple(e) for e in board])
                     moves[c](board)
-                    add_tile(board)
+
+                    if old_board != tuple([tuple(e) for e in board]):
+                        add_tile(board)
 
                 t.render_to_terminal(printBoard(board))
 
